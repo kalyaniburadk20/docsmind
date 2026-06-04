@@ -8,3 +8,5 @@
 
 Blockers:
 - None
+
+- Tomorrow: ticket #2 — close out repo setup, start ticket #3 (Python skeleton
