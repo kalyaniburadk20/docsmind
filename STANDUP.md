@@ -1,5 +1,15 @@
 # Daily Standups
 
+  ## 2026-06-11 (Day 4)
+  Yesterday: Ollama smoke tests + embedding model debugging (PR #9, #10)
+  Today:     PDF loading + chunking pipeline (PR #?)
+  Blockers:  none
+  Notes:
+    - PyPDFLoader produces one Document per page; splitter then merges
+      across pages with overlap.
+    - Chose chunk_size=500, overlap=80 as starting defaults; tested
+      200/30 and 1500/200 to feel the trade-off.
+      
   ## 2026-06-09 (Day 3)
   Yesterday: backend skeleton + /health route (PR #N)
   Today:     ChatOllama + OllamaEmbeddings smoke tests; cosine sim experiment
