@@ -20,14 +20,19 @@ CHUNK_OVERLAP = 80        # characters of overlap between adjacent chunks
 def normalize_text(text: str) -> str:
     """Clean up PDF extraction artifacts.
 
-    Common issues from Google Docs / various PDF producers:
-    - words on separate lines: "submit\n \nresponses"  -> "submit responses"
-    - double/multiple spaces:  "desktop  computers"    -> "desktop computers"
-    - excessive blank lines:   "para1\n\n\n\npara2"    -> "para1\n\npara2"
+    Strategy: do single-newline cleanup BEFORE paragraph-break normalization,
+    so we don't accidentally collapse word-per-line text into "paragraphs".
     """
-    text = re.sub(r"\n\s*\n", "\n\n", text)           # normalize paragraph breaks
-    text = re.sub(r"(?<!\n)\n(?!\n)", " ", text)      # single newlines -> spaces
-    text = re.sub(r"[ \t]+", " ", text)               # multiple spaces -> one
+    # Step 1: single newlines that are NOT part of a blank-line paragraph break
+    # become spaces. This handles "word\nword" -> "word word".
+    text = re.sub(r"(?<!\n)\n(?!\n)", " ", text)
+
+    # Step 2: collapse 3+ newlines down to exactly two (a paragraph break).
+    text = re.sub(r"\n{3,}", "\n\n", text)
+
+    # Step 3: collapse multiple spaces/tabs into one.
+    text = re.sub(r"[ \t]+", " ", text)
+
     return text.strip()
 
 
